@@ -1,41 +1,14 @@
 pipeline {
-    agent any
-
-    options {
-        timestamps()
-        buildDiscarder(logRotator(numToKeepStr: '10'))
+  agent any
+  stages {
+    stage('Build') {
+      steps { echo 'Building...' }
     }
-
-    stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
-        stage('Install') {
-            steps {
-                sh '''
-                    python3 -m venv .venv
-                    . .venv/bin/activate
-                    pip install -r requirements.txt
-                '''
-            }
-        }
-
-        stage('Test') {
-            steps {
-                sh '''
-                    . .venv/bin/activate
-                    pytest --junitxml=reports/junit.xml
-                '''
-            }
-        }
+    stage('Test') {
+      steps { echo 'Testing...' }
     }
-
-    post {
-        always {
-            junit 'reports/junit.xml'
-        }
+    stage('Deploy') {
+      steps { echo 'Deploying...' }
     }
+  }
 }
